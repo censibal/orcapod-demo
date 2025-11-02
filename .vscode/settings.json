@@ -20,5 +20,6 @@
     "notebook.output.scrolling": true,
     "python.defaultInterpreterPath": "~/.local/share/base/bin/python3",
     "python.terminal.activateEnvironment": false,
-    "workbench.panel.defaultLocation": "right"
+    "workbench.panel.defaultLocation": "right",
+    "workbench.secondarySideBar.defaultVisibility": "hidden"
 }
