@@ -26,7 +26,6 @@
 				"tamasfe.even-better-toml", // *.toml language support
 				"eamodio.gitlens", // Git explorer in VSCode
 				"streetsidesoftware.code-spell-checker", // Catch spelling errors in docs
-				"GitHub.copilot-chat", // GitHub Copilot AI assistant
 				"ms-python.python", // Python IDE
 				"ms-toolsai.jupyter", // Jupyter IDE
 				"ms-python.black-formatter" // Python code formatter
