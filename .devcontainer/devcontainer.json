@@ -11,7 +11,7 @@
 	},
 	"postStartCommand": "mkdir -p data_lake && docker system prune -fa && docker volume prune -f",
 	"hostRequirements": {
-		"cpus": 2,
+		"cpus": 4,
 		"memory": "7gb",
 		"storage": "32gb"
 	},
