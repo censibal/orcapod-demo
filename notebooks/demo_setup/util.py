@@ -1,9 +1,10 @@
 from collections.abc import Awaitable
 import subprocess
 from IPython.display import SVG
-from IPython.display import display, clear_output
+from IPython.display import display, clear_output, HTML
 from time import sleep
 from collections.abc import Callable
+from pathlib import Path
 
 
 async def print_crash(long_task: Awaitable):
@@ -30,3 +31,18 @@ def animate_display(next_display_object: Callable):
         display_handle = display(display_id="current")
         display_handle.update(display_object)
         sleep(0.1)
+
+
+def display_images(dir_path: str, per_row: int = 3, width: int = 250):
+    dir_path = Path(dir_path)
+    images = list(dir_path.rglob("*.jpeg"))
+
+    html = '<div style="display:flex; flex-direction:column; gap:10px;">'
+    for i in range(0, len(images), per_row):
+        html += '<div style="display:flex; gap:10px;">'
+        for img_path in images[i:i+per_row]:
+            html += f'<img src="{img_path}" width="{width}">'
+        html += '</div>'
+    html += '</div>'
+
+    display(HTML(html))
