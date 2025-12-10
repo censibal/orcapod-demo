@@ -47,7 +47,7 @@ def display_images(dir_path: str, per_row: int = 3, width: int = 250):
                 encoded = base64.b64encode(f.read()).decode("ascii")
             html += (
                 f'<img src="data:image/jpeg;base64,{encoded}" '
-                f'style="width:{width}px; height:auto; display:block;">'
+                f'style="width:{width}px; height:auto; margin-bottom:10px;">'
             )
         html += "</div>"
 
