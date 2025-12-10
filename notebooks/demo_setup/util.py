@@ -1,5 +1,6 @@
 from collections.abc import Awaitable
 import subprocess
+import base64
 from IPython.display import SVG
 from IPython.display import display, clear_output, HTML
 from time import sleep
@@ -36,13 +37,18 @@ def animate_display(next_display_object: Callable):
 def display_images(dir_path: str, per_row: int = 3, width: int = 250):
     dir_path = Path(dir_path)
     images = list(dir_path.rglob("*.jpeg"))
+    
+    html = ""
 
-    html = '<div style="display:flex; flex-direction:column; gap:10px;">'
     for i in range(0, len(images), per_row):
         html += '<div style="display:flex; gap:10px;">'
         for img_path in images[i:i+per_row]:
-            html += f'<img src="{img_path}" width="{width}">'
-        html += '</div>'
-    html += '</div>'
+            with open(img_path, "rb") as f:
+                encoded = base64.b64encode(f.read()).decode("ascii")
+            html += (
+                f'<img src="data:image/jpeg;base64,{encoded}" '
+                f'style="width:{width}px; height:auto; display:block;">'
+            )
+        html += "</div>"
 
     display(HTML(html))
