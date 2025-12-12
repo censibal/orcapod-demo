@@ -1,10 +1,12 @@
 from collections.abc import Awaitable
 import subprocess
+import base64
 from IPython.display import SVG
 from IPython.display import display, clear_output, HTML
 from time import sleep
 from collections.abc import Callable
 from pathlib import Path
+from jinja2 import Template
 
 
 async def print_crash(long_task: Awaitable):
@@ -33,16 +35,24 @@ def animate_display(next_display_object: Callable):
         sleep(0.1)
 
 
-def display_images(dir_path: str, per_row: int = 3, width: int = 250):
-    dir_path = Path(dir_path)
-    images = list(dir_path.rglob("*.jpeg"))
+def display_images(dir_path: str, per_row: int = 3, width: int = 250, height: int = 200):
+    images = list(Path(dir_path).rglob("*.jpeg"))
+    
+    srcs = []
+    for image in images:
+        with open(image, "rb") as f:
+            encoded = base64.b64encode(f.read()).decode("ascii")
+        srcs.append(f"data:image/jpeg;base64,{encoded}")
 
-    html = '<div style="display:flex; flex-direction:column; gap:10px;">'
-    for i in range(0, len(images), per_row):
-        html += '<div style="display:flex; gap:10px;">'
-        for img_path in images[i:i+per_row]:
-            html += f'<img src="{img_path}" width="{width}">'
-        html += '</div>'
-    html += '</div>'
-
-    display(HTML(html))
+    tmpl = Template("""
+        {% for row in rows %}
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+            {% for src in row %}
+            <img src="{{ src }}" style="width:{{ width }}px; height: {{ height }}px;">
+            {% endfor %}
+        </div>
+        {% endfor %}
+    """)
+    
+    rows = [srcs[i:i+per_row] for i in range(0, len(srcs), per_row)]
+    display(HTML(tmpl.render(rows=rows, width=width, height=height)))

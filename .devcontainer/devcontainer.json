@@ -10,6 +10,7 @@
 		"RUST_BACKTRACE": "1"
 	},
 	"postStartCommand": "mkdir -p data_lake && docker pull python:alpine && docker pull python:3.12-slim && docker pull python:3.13-slim && docker pull demisto/opencv:1.0.0.4855524 && docker pull dpokidov/imagemagick:7.1.1-47",
+	"postCreateCommand": "uv pip install -q jinja2 -p ~/.local/share/base",
 	"hostRequirements": {
 		"cpus": 4,
 		"memory": "7gb",
