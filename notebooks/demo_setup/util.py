@@ -38,13 +38,13 @@ def animate_display(next_display_object: Callable):
 def display_images(dir_path: str, per_row: int = 3, width: int = 250, height: int = 200):
     images = list(Path(dir_path).rglob("*.jpeg"))
     
-    srcs = []
+    image_src = []
     for image in images:
         with open(image, "rb") as f:
             encoded = base64.b64encode(f.read()).decode("ascii")
-        srcs.append(f"data:image/jpeg;base64,{encoded}")
+        image_src.append(f"data:image/jpeg;base64,{encoded}")
 
-    tmpl = Template("""
+    template = Template("""
         {% for row in rows %}
         <div style="display:flex; gap:10px; margin-bottom:10px;">
             {% for src in row %}
@@ -54,5 +54,5 @@ def display_images(dir_path: str, per_row: int = 3, width: int = 250, height: in
         {% endfor %}
     """)
     
-    rows = [srcs[i:i+per_row] for i in range(0, len(srcs), per_row)]
-    display(HTML(tmpl.render(rows=rows, width=width, height=height)))
+    rows = [image_src[i:i+per_row] for i in range(0, len(image_src), per_row)]
+    display(HTML(template.render(rows=rows, width=width, height=height)))
