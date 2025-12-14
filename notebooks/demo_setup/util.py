@@ -3,13 +3,11 @@ import subprocess
 from IPython.display import display, clear_output, SVG, HTML
 from time import sleep
 from collections.abc import Callable
-from pathlib import Path
 from minijinja import Environment
 from textwrap import dedent
-import numpy as np
-import math
-from base64 import b64encode
 import itertools as it
+from base64 import b64encode
+from pathlib import Path
 
 ENVIRONMENT = Environment(
     templates={
@@ -57,27 +55,6 @@ def animate_display(next_display_object: Callable):
         sleep(0.1)
 
 
-# def display_jpegs(
-#     dir_path: str, column_count: int = 3, width: int = 250, height: int = 200
-# ):
-#     html = ENVIRONMENT.render_template(
-#         "image_grid",
-#         images=np.array_split(
-#             (
-#                 image_paths := [
-#                     f"data:image/jpeg;base64,{b64encode(path.read_bytes()).decode('ascii')[0:30]}"
-#                     for path in Path(dir_path).rglob("*.jpeg")
-#                 ]
-#             ),
-#             math.ceil(len(image_paths) / column_count),
-#         ),
-#         width=width,
-#         height=height,
-#     )
-#     return html
-#     display(HTML(html))
-
-
 def display_jpegs(
     dir_path: str, column_count: int = 3, width: int = 250, height: int = 200
 ):
@@ -93,5 +70,4 @@ def display_jpegs(
         width=width,
         height=height,
     )
-    # return html
     display(HTML(html))
