@@ -1,12 +1,34 @@
 from collections.abc import Awaitable
 import subprocess
-import base64
-from IPython.display import SVG
-from IPython.display import display, clear_output, HTML
+from IPython.display import display, clear_output, SVG, HTML
 from time import sleep
 from collections.abc import Callable
 from pathlib import Path
-from jinja2 import Template
+from minijinja import Environment
+from textwrap import dedent
+import numpy as np
+import math
+from base64 import b64encode
+import itertools as it
+
+ENVIRONMENT = Environment(
+    templates={
+        "image_grid": dedent(
+            """
+            {% for image_row in images -%}
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                {%- for image in image_row %}
+                <img
+                    src="{{ image }}"
+                    style="width:{{ width }}px; height: {{ height }}px;"
+                >
+                {%- endfor %}
+            </div>
+            {% endfor -%}
+            """
+        ).strip()
+    },
+)
 
 
 async def print_crash(long_task: Awaitable):
@@ -35,24 +57,41 @@ def animate_display(next_display_object: Callable):
         sleep(0.1)
 
 
-def display_images(dir_path: str, per_row: int = 3, width: int = 250, height: int = 200):
-    images = list(Path(dir_path).rglob("*.jpeg"))
-    
-    image_src = []
-    for image in images:
-        with open(image, "rb") as f:
-            encoded = base64.b64encode(f.read()).decode("ascii")
-        image_src.append(f"data:image/jpeg;base64,{encoded}")
+# def display_jpegs(
+#     dir_path: str, column_count: int = 3, width: int = 250, height: int = 200
+# ):
+#     html = ENVIRONMENT.render_template(
+#         "image_grid",
+#         images=np.array_split(
+#             (
+#                 image_paths := [
+#                     f"data:image/jpeg;base64,{b64encode(path.read_bytes()).decode('ascii')[0:30]}"
+#                     for path in Path(dir_path).rglob("*.jpeg")
+#                 ]
+#             ),
+#             math.ceil(len(image_paths) / column_count),
+#         ),
+#         width=width,
+#         height=height,
+#     )
+#     return html
+#     display(HTML(html))
 
-    template = Template("""
-        {% for row in rows %}
-        <div style="display:flex; gap:10px; margin-bottom:10px;">
-            {% for src in row %}
-            <img src="{{ src }}" style="width:{{ width }}px; height: {{ height }}px;">
-            {% endfor %}
-        </div>
-        {% endfor %}
-    """)
-    
-    rows = [image_src[i:i+per_row] for i in range(0, len(image_src), per_row)]
-    display(HTML(template.render(rows=rows, width=width, height=height)))
+
+def display_jpegs(
+    dir_path: str, column_count: int = 3, width: int = 250, height: int = 200
+):
+    html = ENVIRONMENT.render_template(
+        "image_grid",
+        images=it.batched(
+            (
+                f"data:image/jpeg;base64,{b64encode(path.read_bytes()).decode('ascii')}"
+                for path in Path(dir_path).rglob("*.jpeg")
+            ),
+            column_count,
+        ),
+        width=width,
+        height=height,
+    )
+    # return html
+    display(HTML(html))
