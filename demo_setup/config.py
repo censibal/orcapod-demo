@@ -3,7 +3,7 @@ from pathlib import Path
 import asyncio
 from .util import print_crash
 
-namespace_lookup = {"default": "../data_lake"}
+namespace_lookup = {"default": "data_lake"}
 data_dir = "data"
 store_dir = "store"
 group = "demo"
