@@ -3,3 +3,4 @@ __pycache__
 data_lake/*
 !data_lake/models
 !data_lake/subjects
+!data_lake/brain_mri
