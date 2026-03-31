@@ -56,14 +56,15 @@ def animate_display(next_display_object: Callable):
 
 
 def display_jpegs(
-    dir_path: str, column_count: int = 3, width: int = 250, height: int = 200
+    dir_path: str, column_count: int = 3, width: int = 250, height: int = 250
 ):
     html = ENVIRONMENT.render_template(
         "image_grid",
         images=it.batched(
             (
-                f"data:image/jpeg;base64,{b64encode(path.read_bytes()).decode('ascii')}"
-                for path in Path(dir_path).rglob("*.jpeg")
+                f"data:image/{path.suffix};base64,{b64encode(path.read_bytes()).decode('ascii')}"
+                for path in Path(dir_path).rglob("*")
+                if path.suffix in (".jpeg", ".png")
             ),
             column_count,
         ),
