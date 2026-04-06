@@ -15,7 +15,8 @@
 		"pull_image_2": "docker pull python:3.12-slim",
 		"pull_image_3": "docker pull python:3.13-slim",
 		"pull_image_4": "docker pull demisto/opencv:1.0.0.4855524",
-		"pull_image_5": "docker pull dpokidov/imagemagick:7.1.1-47"
+		"pull_image_5": "docker pull maclucky/bambulab-timelapse-downloader:1.0.9",
+		"pull_image_6": "docker pull dpokidov/imagemagick:7.1.1-47"
 	},
 	"hostRequirements": {
 		"cpus": 4,
